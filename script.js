@@ -5,29 +5,38 @@
  */
 
 $(document).ready(function () {
-//jQuery for hiding buttons
+
+//jQuery for HIDING BUTTONS
     $("#task").hide();
-    //Onclick event when "Plus" button is clicked form displays
+
+//ONCLICK event when "Plus" button is clicked form displays
     $("#button").click(function () {
         $("#task").show();
     });
-    //makes boxes sortable and updates the order when dragged around
+
+//makes boxes on left side sortable and updates the order when dragged around
     $(function () {
         $("#leftContainer ul").sortable({opacity: 0.6, cursor: 'move', update: function () {
-                var order = $(this).sortable("serialize") + '&action=updateRecordsListings';
+                var order = $(this).sortable("serialize");
                 $.post("updateDB.php", order, function (theResponse) {
+                    newTask(order)
+                    refreshTask("newTask");
 
                 });
             }
         });
     });
+    
+
+
 //Make both boxes sortable
     $(function () {
         $("#toDoListArray, #completedTasks").sortable(
                 {connectWith: ".sortableBox"})
                 .disableSelection();
     });
-//Onclick event when "Add" button is clicked.
+
+//ONCLICK event when "Add" button is clicked.
 
     $("#submit").click(function () {
 
@@ -40,15 +49,12 @@ $(document).ready(function () {
         });
     });
 
-    //Delete task when move to trash button is clicked
+    //DELETE TASK(S) when "Delete Completed Task(s) button is clicked
     $("#btn").click(function () {
-
-
         deleteTask();
-
     });
 
-    //update event when item is moved to "Task Complete" box.
+    //UPDATE event when item is moved to "Task Complete" box.
     $(function () {
         $("#rightContainer ul").sortable({opacity: 0.6, cursor: 'move', update: function () {
                 var order = $(this).sortable("serialize");
@@ -61,47 +67,65 @@ $(document).ready(function () {
 //Mark the Task Complete
     function taskComplete(order) {
         $.post("taskComplete.php", order, function () {
-            alert("Inside taskComplete(): " + order);
-            $("#responseMessage").html("");
-            $("#responseMessage").append("The task(s) have been updated");
+           // alert("Inside taskComplete(): " + order);
+            updateMessageResponse();
             refreshTask("showTaskCompleted");
         });
     }
 
+
+////When box is dragged from complete to new task
+    function newTask(order) {
+        $.post("newTask.php", order, function () {
+         //  alert("Inside newTask(): " + order);
+            updateMessageResponse();
+            refreshTask("newTask");
+        });
+
+    }
+
+
 //Update the task list
     function refreshTask(taskType) {
-        alert(taskType);
+        //alert("Inside refreshTask(): " + taskType);
         var url = "getAllTasks.php?taskType=" + taskType;
         $.get(url, null, function (response) {
-            alert(response);
+           // alert("Inside refreshTask(): + response" + response);
             if (taskType === "newTask") {
                 $("#toDoListArray").html(response);
             }
             if (taskType === "showTaskCompleted") {
                 $("#completedTasks").html(response);
             }
-            $("#responseMessage").html("");
-            $("#responseMessage").append("Task list has been refreshed.");
-//            setTimeout(function () {
-//                $('#responseMessage').remove();
-//            }, 2000);
+            updateMessageResponse();
+
         });
     }
 
-//Delete tasks
+//Delete tasks but give a confirm alert first.
 
     function deleteTask() {
-        //confirm("Are you sure?");
-        // if(confirm) {
-        // ajax dialogue
-    //}else{};
-        $.post("deleteTask.php", null, function () {
-            $("#responseMessage").html("");
-            $("#responseMessage").append("The completed task(s) have been deleted");
+        if (confirm("Are you sure you want to delete task(s)?")) {
+            $.post("deleteTask.php", null, function () {
+                deleteMessageResponse();
+                refreshTask("showTaskCompleted");
+            });
+        } else {
             refreshTask("showTaskCompleted");
-        });
+        }
+    }
+//response message when tasks have been updated
+    function updateMessageResponse() {
+        $("#responseMessage").html("");
+        $("#responseMessage").append("The task(s) have been updated");
+        $('#responseMessage').delay(2000).fadeOut();
     }
 
-
+//response message when tasks have been deleted
+    function deleteMessageResponse() {
+        $("#responseMessage").html("");
+        $("#responseMessage").append("The completed task(s) have been deleted");
+        $('#responseMessage').delay(2000).fadeOut();
+    }
 
 });

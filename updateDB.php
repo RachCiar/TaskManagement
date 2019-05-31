@@ -2,7 +2,7 @@
 require("connect_db.php"); 
 
 
-$updateRecordsArray 	= $_POST['toDoListArray'];
+$updateRecordsArray 	= $_POST['toDoListArrayID'];
 
 
 	
@@ -10,12 +10,12 @@ $updateRecordsArray 	= $_POST['toDoListArray'];
 	foreach ($updateRecordsArray as $recordIDValue) {
 		
 		$query = "UPDATE task SET task_pos = " . $listingCounter . " WHERE task_ID = " . $recordIDValue;
-		mysqli_query($dbc, $query) or die('Error, insert query failed');
+		$result = mysqli_query($dbc, $query) or die('Error, insert query failed');
 		$listingCounter = $listingCounter + 1;	
 	}
 	
-	echo '<pre>';
-	print_r($updateRecordsArray);
-	echo '</pre>';
-	echo 'If you refresh the page, you will see that records will stay just as you modified.';
+//	echo '<pre>';
+//	print_r($updateRecordsArray);
+//	echo '</pre>';
+//	echo 'If you refresh the page, you will see that records will stay just as you modified.';
 ?>

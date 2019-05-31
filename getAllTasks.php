@@ -20,7 +20,7 @@ switch ($taskType) {
         $result = mysqli_query($dbc, $query);
         while ($row = mysqli_fetch_array($result, MYSQLI_ASSOC)) {
             ?>
-            <li class="bg-color1" id="toDoListArrayID_<?php echo $row['task_ID'];?>"><?php echo $row['task_item']; ?></li>
+            <li class="bg-color2" id="toDoListArrayID_<?php echo $row['task_ID'];?>"><?php echo $row['task_item']; ?></li>
             <?php
         }
         break;

@@ -33,18 +33,18 @@ and open the template in the editor.
         <div id="container" >
 
             <div id="leftContainer">
-
+                <h2>Drag tasks around and place them in order.</h2>
                 <ul id="toDoListArray" class="sortableBox">
                     <?php
                     $query = "SELECT * FROM task WHERE status = 0 ORDER BY task_pos ASC"; //WHERE 'status' =0 means active task";
                     $result = mysqli_query($dbc, $query);
 
-                    /* Debug */
-                    if ($result) {
-                        echo "There are records";
-                    } else {
-                        echo"NO RECORDS";
-                    }
+//                    /* Debug */
+//                    if ($result) {
+//                        echo "There are records";
+//                    } else {
+//                        echo"NO RECORDS";
+//                    }
 
                     while ($row = mysqli_fetch_array($result, MYSQLI_ASSOC)) {
                         ?>
@@ -61,19 +61,19 @@ and open the template in the editor.
                     $query = "SELECT * FROM task WHERE status = 1 ORDER BY task_pos ASC"; //WHERE 'status' =0 means active task";
                     $result = mysqli_query($dbc, $query);
 
-                    /* Debug */
-                    if ($result) {
-                        echo "There are records";
-                    } else {
-                        echo"NO RECORDS";
-                    }
+//                    /* Debug */
+//                    if ($result) {
+//                        echo "There are records";
+//                    } else {
+//                        echo"NO RECORDS";
+//                    }
 
                     while ($row = mysqli_fetch_array($result, MYSQLI_ASSOC)) {
                         ?>
                         <li class="bg-color2" id="toDoListArrayID_<?php echo $row['task_ID'];?>"><?php echo $row['task_item']; ?></li>
                     <?php } ?>
                  </ul>
-                <button id="btn">Move completed tasks to trash</button>
+                <button id="btn">Delete Completed Task(s)</button>
             </div>
            
         </div>
